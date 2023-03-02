@@ -1,0 +1,24 @@
+{
+  "name": "mail-reaper-9k",
+  "version": "1.0.0",
+  "description": "kill your email",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamescarney3/mail-reaper-9k.git"
+  },
+  "keywords": [
+    "email",
+    "organization",
+    "automation"
+  ],
+  "author": "james carney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamescarney3/mail-reaper-9k/issues"
+  },
+  "homepage": "https://github.com/jamescarney3/mail-reaper-9k#readme"
+}

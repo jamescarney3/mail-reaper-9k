@@ -5,5 +5,7 @@ src/**
 node_modules/**
 
 # configs and such
-LICENSE
+package.json
+yarn.lock
 webpack.config.js
+LICENSE

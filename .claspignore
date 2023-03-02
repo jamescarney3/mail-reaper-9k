@@ -1,0 +1,9 @@
+# GAS is only interested in the compiled result
+src/**
+
+# don't push dependencies
+node_modules/**
+
+# configs and such
+LICENSE
+webpack.config.js

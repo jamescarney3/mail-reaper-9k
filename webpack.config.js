@@ -1,3 +1,5 @@
+const GasPlugin = require('gas-webpack-plugin');
+
 module.exports = {
   context: __dirname,
   entry: './src/main.js',
@@ -8,4 +10,7 @@ module.exports = {
     path: __dirname ,
     filename: 'code.gs',
   },
+  plugins: [new GasPlugin({
+    autoGlobalExportsFiles: ['**/*.js'],
+  })],
 }

@@ -1,4 +1,5 @@
 const greet = (user: string) => {
+  console.log('sample env variable: ' + process.env.EXAMPLE_ENV_VAR);
   Logger.log('hello ' + user);
 };
 

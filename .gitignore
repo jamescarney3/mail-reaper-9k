@@ -6,3 +6,6 @@ code.gs
 
 # secret things
 .env
+
+appsscript.json
+.clasp.json

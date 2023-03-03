@@ -1,4 +1,5 @@
 const GasPlugin = require('gas-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   context: __dirname,
@@ -18,7 +19,10 @@ module.exports = {
     path: __dirname ,
     filename: 'code.gs',
   },
-  plugins: [new GasPlugin({
-    autoGlobalExportsFiles: ['**/*.ts'],
-  })],
+  plugins: [
+    new GasPlugin({
+      autoGlobalExportsFiles: ['**/*.js'],
+    }),
+    new Dotenv(),
+  ],
 }

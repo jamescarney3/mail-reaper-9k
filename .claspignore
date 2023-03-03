@@ -4,6 +4,9 @@ src/**
 # don't push dependencies
 node_modules/**
 
+# don't push scripts
+scripts/**
+
 # configs and such
 package.json
 yarn.lock

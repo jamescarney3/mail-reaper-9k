@@ -1,15 +1,17 @@
-const greet = (user: string) => {
-  console.log('sample env variable: ' + process.env.EXAMPLE_ENV_VAR);
-  Logger.log('hello ' + user);
+import { getAllThreadIds } from './inbox';
+
+const execute = (): void => {
+  const threadIds = getAllThreadIds();
+  Logger.log(threadIds);
 };
 
-// TODO: move this to a types declaration file
+// TODO: move this to a types declaration file?
 declare global {
-  function greet(user: string): void;
+  function execute(): void;
 }
 
-global.greet = greet;
+global.execute = execute;
 
 // import or export keywords let TS know that it should consider this a module
 // and not complain about augmenting the global scope
-export default global.greet;
+export default global.execute;

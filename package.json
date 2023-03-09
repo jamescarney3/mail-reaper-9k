@@ -2,10 +2,11 @@
   "name": "mail-reaper-9k",
   "version": "1.0.0",
   "description": "kill your email",
-  "main": "src/main.js",
+  "main": "src/main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production"
+    "test": "mocha",
+    "build": "webpack --mode production",
+    "test:watch": "webpack --mode production --watch"
   },
   "repository": {
     "type": "git",

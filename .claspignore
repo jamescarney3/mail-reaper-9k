@@ -1,5 +1,6 @@
 # GAS is only interested in the compiled result
 src/**
+test/**
 
 # don't push dependencies
 node_modules/**
@@ -10,5 +11,6 @@ scripts/**
 # configs and such
 package.json
 yarn.lock
+tsconfig.json
 webpack.config.js
 LICENSE

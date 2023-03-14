@@ -1,4 +1,4 @@
-import { getAllThreadIds } from '~/inbox';
+import { getAllThreadIds } from '~/resources/inbox';
 
 const execute = (): void => {
   const threadIds = getAllThreadIds();

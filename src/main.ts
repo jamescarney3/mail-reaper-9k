@@ -1,8 +1,12 @@
 import { getAllThreadIds } from '~/resources/inbox';
+import { getThread, getThreadMetadata } from '~/resources/threads';
 
 const execute = (): void => {
   const threadIds = getAllThreadIds();
-  Logger.log(threadIds);
+  threadIds.forEach((id) => {
+    const thread = getThread(id);
+    Logger.log(getThreadMetadata(thread));
+  })
 };
 
 // TODO: move this to a types declaration file?

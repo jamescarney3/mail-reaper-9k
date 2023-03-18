@@ -4,9 +4,11 @@
   "description": "kill your email",
   "main": "src/main.ts",
   "scripts": {
-    "test": "mocha",
     "build": "webpack --mode production",
-    "test:watch": "webpack --mode production --watch"
+    "build:watch": "webpack --mode production --watch",
+    "test": "mocha",
+    "test:watch": "mocha --watch",
+    "test:coverage": "nyc yarn run test"
   },
   "repository": {
     "type": "git",

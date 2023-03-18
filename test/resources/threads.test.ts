@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 
-import { getThread, getThreadMetadata } from '../../src/resources/threads';
+import { getThread, getThreadMetadata } from '~/resources/threads';
 
 
 describe('threads resource module', () => {

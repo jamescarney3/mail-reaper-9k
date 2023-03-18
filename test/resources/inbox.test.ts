@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { stub } from 'sinon';
 
 
-import { getAllThreadIds } from '../../src/resources/inbox';
+import { getAllThreadIds } from '~/resources/inbox';
 
 (global as any).Gmail = {
   Users: {

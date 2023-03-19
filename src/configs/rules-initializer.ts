@@ -39,9 +39,9 @@ export const getSourceDataRules = (): Array<Rule> => {
   return sourceDataRules;
 };
 
-export const importRules = (sheetsId?: string, pageName?: string): Array<Rule> => {
-  if ([sheetsId, pageName].every(Boolean)) {
-    return getSpreadsheetRules(sheetsId, pageName);
+export const importRules = (sheetsId?: string): Array<Rule> => {
+  if (sheetsId) {
+    return getSpreadsheetRules(sheetsId, RULES_SHEET_NAME);
   } else {
     return getSourceDataRules();
   }

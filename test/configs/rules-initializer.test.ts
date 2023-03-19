@@ -28,7 +28,7 @@ describe('rules initializer config module', () => {
       delete global.SpreadsheetApp;
     });
 
-    it('returns an array of Rule instances when spreadhseet ID env var is unset', () => {
+    it('returns an array of Rule instances from data module', () => {
       const rules = importRules();
 
       rules.forEach((rule) => {
@@ -38,7 +38,7 @@ describe('rules initializer config module', () => {
       });
     });
 
-    it('returns an array of Rule instances when spreadhseet ID env var is set', () => {
+    it('returns an array of Rule instances from a Sheets doc', () => {
       // NB: see comment above, annoying to have to do this
       spreadsheetAppStub.openById.returns({
         getSheetByName: (name: string) => ({
@@ -52,7 +52,7 @@ describe('rules initializer config module', () => {
         }),
       });
 
-      const rules = importRules('some-sheets-doc-id-1234', 'Mail Reaper Rules');
+      const rules = importRules('some-sheets-doc-id-1234');
 
       rules.forEach((rule) => {
         expect(rule.source).to.be.a('string');

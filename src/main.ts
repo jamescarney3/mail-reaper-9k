@@ -1,12 +1,7 @@
-import { getAllThreadIds } from '~/resources/inbox';
-import { getThread, getThreadMetadata } from '~/resources/threads';
+import { importRules } from '~/configs/rules-initializer';
 
 const execute = (): void => {
-  const threadIds = getAllThreadIds();
-  threadIds.forEach((id) => {
-    const thread = getThread(id);
-    Logger.log(getThreadMetadata(thread));
-  })
+  Logger.log(importRules());
 };
 
 // TODO: move this to a types declaration file?

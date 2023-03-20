@@ -1,28 +1,67 @@
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 
-import { getThread, getThreadMetadata } from '~/resources/threads';
+import { listThreadIds, getThread, getThreadMetadata } from '~/resources/threads';
 
 
 describe('threads resource module', () => {
   let gmailAppStub: any;
+  let gmailThreadsStub: any;
 
   beforeEach(() => {
     global.GmailApp = {
       getThreadById: (id: string) => {},
     } as any;
 
-    gmailAppStub = stub(GmailApp);
+    global.Gmail = {
+      Users: {
+        Threads: {
+          // match this signature to its type from @types/google-apps-script
+          list: (): { threads: Array<{ id: string }>, nextPageToken?: string } => (
+            { threads: [{ id: 'foo' }], nextPageToken: null }
+          ),
+        },
+      },
+    } as any;
 
-    gmailAppStub.getThreadById.callsFake((id: string) => ({
+    gmailAppStub = stub(GmailApp);
+    gmailThreadsStub = stub(Gmail.Users.Threads);
+
+    gmailAppStub.getThreadById.returns({
       getFirstMessageSubject: () => 'sample subject',
       getMessages: () => [{ getFrom: () => 'sample sender' }],
-    }));
+    });
+
+    gmailThreadsStub.list.returns({
+      threads: [{ id: 'foo' }, { id: 'bar' }],
+      nextPageToken: null,
+    });
   });
 
   afterEach(() => {
     gmailAppStub.getThreadById.restore();
     delete global.GmailApp;
+    delete global.Gmail;
+  });
+
+  describe('listThreadIds', () => {
+    it('returns an array of id strings', () => {
+      const ids = listThreadIds();
+      expect(ids).to.have.members(['foo', 'bar']);
+    });
+
+    it('returns an array of id strings when threads list is longer than service page limit', () => {
+      gmailThreadsStub.list.onFirstCall().returns({
+        threads: [
+          { id: 'baz' },
+          { id: 'qux' },
+        ],
+        nextPageToken: 'somepagetoken',
+      });
+
+      const ids = listThreadIds();
+      expect(ids).to.have.members(['foo', 'bar', 'baz', 'qux']);
+    });
   });
 
   describe('getThread', () => {

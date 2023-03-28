@@ -1,7 +1,5 @@
-type ThreadMetadata = {
-  sender: string,
-  subject: string,
-}
+import { ThreadMetadata } from '~/types';
+
 
 const categories = ['PROMOTIONS', 'SOCIAL'];
 const threadsQuery = categories.reduce((q, cat) => (`${q} AND NOT in:${cat}`),'in:INBOX');

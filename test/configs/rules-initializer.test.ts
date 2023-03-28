@@ -1,64 +1,87 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
+import { stub, createSandbox } from 'sinon';
 
-import { importRules } from '~/configs/rules-initializer';
+// NB: need to define this here because it needs to exist in the global scope
+// before the rules-initializer module loads; this is related to the anti-
+// pattern discussed in that module's comments and is one of the aspects that
+// could magically become nicer if the application were to transition more
+// fully to functional patterns
+global.SpreadsheetApp = {
+  openById: (id: string) => ({
+    getSheetByName: (name: string) => ({
+      getDataRange: () => ({ getValues: (): Array<Array<string>> => [[]] }),
+    }),
+  }),
+} as any;
+
+import { _getRules, rules } from '~/configs/rules-initializer';
+import * as rulesData from '~/data/rules-data';
+import * as constants from '~/configs/constants-initializer';
 
 
 describe('rules initializer config module', () => {
-  describe('importRules', () => {
-    let spreadsheetAppStub: any;
-
-    beforeEach(() => {
-      // NB: defining this here and then having to stub it sucks; should find
-      // out if there's a better way to handle this or if it's a natural
-      // issue with testing complex globals
-      global.SpreadsheetApp = {
-        openById: (id: string) => ({
-          getSheetByName: (name: string) => ({
-            getDataRange: () => ({ getValues: (): Array<Array<string>> => [[]] }),
-          }),
-        }),
-      } as any;
-
-      spreadsheetAppStub = stub(SpreadsheetApp);
-    });
+  describe('getRules initializer', () => {
+    const rulesSandbox = createSandbox();
 
     afterEach(() => {
-      spreadsheetAppStub.openById.restore();
-      delete global.SpreadsheetApp;
+      rulesSandbox.restore();
     });
 
-    it('returns an array of Rule instances from data module', () => {
-      const rules = importRules();
+    it('returns an array of Rule instances from a data module', () => {
+      rulesSandbox.replace(constants, 'RULES_SOURCE', 'data module');
+      rulesSandbox.replace(rulesData, 'default', [
+        {
+          source: 'Human Recognizable Name, Inc.',
+          sender: 'regexforsender@humanrecognizable.org',
+          subject: 'example subject pattern',
+          label: 'Some Category/Human Recognizable',
+        }, {
+          source: 'Some Newsletter',
+          sender: 'somecooltopic@newsletters.com',
+          subject: 'weekly newsletter subject pattern',
+          label: 'Newsletters',
+          markRead: false,
+        }, {
+          source: 'Limited Time Offers',
+          sender: 'marketing@somestore.com',
+          subject: '50% off today only',
+        },
+      ]);
 
-      rules.forEach((rule) => {
+      _getRules('data module').forEach((rule) => {
         expect(rule.source).to.be.a('string');
         expect(rule.sender).to.be.a('string');
         expect(rule.subject).to.be.a('string');
       });
     });
 
-    it('returns an array of Rule instances from a Sheets doc', () => {
-      // NB: see comment above, annoying to have to do this
-      spreadsheetAppStub.openById.returns({
+    it('returns an array of Rule instances from a Sheets document', () => {
+      rulesSandbox.replace(constants, 'RULES_SOURCE', 'sheets doc');
+      rulesSandbox.stub(global.SpreadsheetApp, 'openById').returns({
         getSheetByName: (name: string) => ({
           getDataRange: () => ({
             getValues: (): Array<Array<string>> => [
-              ['source', 'sender', 'subject', 'space delimited', 'dash-delimited', 'under_delimited', 'Capitalized header'],
-              ['example source 1', 'example1@sender.com', 'Example Subject 1!'],
-              ['example source 2', 'example2@sender.com', 'Example Subject 2!'],
+              ['source', 'sender', 'subject', 'camelCased','space space', 'underscore_sep', 'hyphen-sep'],
+              ['Limited Time Offers','marketing@somestore.com','50% off today only']
             ],
           }),
         }),
-      });
+      } as any);
 
-      const rules = importRules('some-sheets-doc-id-1234');
-
-      rules.forEach((rule) => {
+      _getRules('sheets doc').forEach((rule) => {
         expect(rule.source).to.be.a('string');
         expect(rule.sender).to.be.a('string');
         expect(rule.subject).to.be.a('string');
       });
+    });
+
+    // NB: this is probably overkill since the RULES_SOURCE constant is typed
+    // as a union of possible values, but if anyone manages to outsmart the
+    // compiler at least this will fail
+    it('throws an error when RULES_SOURCE constant is invalid', () => {
+      rulesSandbox.replace(constants, 'RULES_SOURCE', 'invalid value' as any);
+
+      expect(_getRules).to.throw();
     });
   });
 });

@@ -1,7 +1,18 @@
-import { importRules } from '~/configs/rules-initializer';
+import { listThreadIds, getThread, getThreadMetadata } from '~/resources/threads';
+import { matchToRule } from '~/resources/rules';
+
 
 const execute = (): void => {
-  Logger.log(importRules());
+  const threadIds = listThreadIds();
+
+  threadIds.forEach((id) => {
+    const thread = getThread(id);
+    const metadata = getThreadMetadata(thread);
+    const ruleMatch = matchToRule(metadata.sender, metadata.subject);
+
+    Logger.log(ruleMatch);
+  });
+
 };
 
 // TODO: move this to a types declaration file?

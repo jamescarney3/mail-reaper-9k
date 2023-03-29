@@ -1,4 +1,4 @@
-import { ThreadMetadata } from '~/types';
+import { ThreadMetadata, GmailLabel, GmailThread } from '~/types';
 
 
 const categories = ['PROMOTIONS', 'SOCIAL'];
@@ -20,6 +20,18 @@ export const listThreadIds = (): Array<string> => {
 
 export const getThread = (id: string) => {
   return GmailApp.getThreadById(id);
+};
+
+export const updateThread = (
+  thread: GmailThread,
+  options: { label?: GmailLabel, markRead?: boolean },
+): GmailThread => {
+  const { label, markRead } = options;
+
+  if (label) thread.addLabel(label);
+  if (markRead) thread.markRead();
+  thread.moveToArchive();
+  return thread;
 };
 
 export const getThreadMetadata = (thread: ReturnType<typeof getThread>): ThreadMetadata => {

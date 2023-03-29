@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 
-import { listThreadIds, getThread, getThreadMetadata } from '~/resources/threads';
+import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
+import { GmailThread, GmailLabel } from '~/types';
 
 
 describe('threads resource module', () => {
@@ -80,6 +81,38 @@ describe('threads resource module', () => {
 
       expect(threadMetadata.sender).to.equal('sample sender');
       expect(threadMetadata.subject).to.equal('sample subject');
+    });
+  });
+
+  describe('updateThread', () => {
+    let exampleThread: GmailThread;
+
+    beforeEach(() => {
+      // cast to GmailThread type in order not to have to implement entire shape
+      exampleThread = {
+        moveToArchive: stub(),
+        addLabel: stub(),
+        markRead: stub(),
+      } as unknown as GmailThread;
+    });
+
+    // no after cleanup hook here since stubs are redeclared every before hook
+
+    it('archives a thread', () => {
+      updateThread(exampleThread, {});
+      expect((exampleThread.moveToArchive as SinonStub<any>).called).to.be.true;
+    });
+
+    it('labels a thread when called with a label option', () => {
+      // cast to GmailLabel type, same as above
+      const exampleLabel = {} as unknown as GmailLabel;
+      updateThread(exampleThread, { label: exampleLabel });
+      expect((exampleThread.addLabel as SinonStub<any>).calledWith(exampleLabel)).to.be.true;
+    });
+
+    it('marks a thread as when called with markRead option set to true', () => {
+      updateThread(exampleThread, { markRead: true });
+      expect((exampleThread.markRead as SinonStub<any>).called).to.be.true;
     });
   });
 });

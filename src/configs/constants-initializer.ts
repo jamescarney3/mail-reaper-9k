@@ -12,3 +12,7 @@ export const RULES_SHEET_NAME: string = 'Mail Reaper Rules';
 // this out of the source in order not to publish in the repo, but could
 // technincally be defined as a string literal here for debugging purposes
 export const RULES_SHEET_ID: string = process.env.RULES_SHEET_ID;
+
+export const LOG_REPORT_DATA: boolean = false;
+export const RESULTS_SHEET_ID: string = process.env.RESULTS_SHEET_ID;
+export const RESULTS_SHEET_NAME: string = 'Mail Reaper Results';

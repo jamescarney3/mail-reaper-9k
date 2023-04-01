@@ -1,18 +1,18 @@
 import { expect } from 'chai';
-import { stub, SinonStub } from 'sinon';
+import { stub, SinonStub, SinonStubbedInstance } from 'sinon';
 
 import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
 import { GmailThread, GmailLabel } from '~/types';
 
 
 describe('threads resource module', () => {
-  let gmailAppStub: any;
-  let gmailThreadsStub: any;
+  let gmailAppStub: SinonStubbedInstance<GoogleAppsScript.Gmail.GmailApp>;
+  let gmailThreadsStub: SinonStubbedInstance<GoogleAppsScript.Gmail.Collection.Users.ThreadsCollection>;
 
   beforeEach(() => {
     global.GmailApp = {
-      getThreadById: (id: string) => {},
-    } as any;
+      getThreadById: () => ({} as GmailThread),
+    } as unknown as GoogleAppsScript.Gmail.GmailApp;
 
     global.Gmail = {
       Users: {
@@ -23,15 +23,17 @@ describe('threads resource module', () => {
           ),
         },
       },
-    } as any;
+    } as unknown as GoogleAppsScript.Gmail;
 
     gmailAppStub = stub(GmailApp);
     gmailThreadsStub = stub(Gmail.Users.Threads);
 
     gmailAppStub.getThreadById.returns({
       getFirstMessageSubject: () => 'sample subject',
-      getMessages: () => [{ getFrom: () => 'sample sender' }],
-    });
+      getMessages: () => [
+        { getFrom: () => 'sample sender' }
+      ] as unknown as Array<GoogleAppsScript.Gmail.GmailMessage>,
+    } as unknown as GmailThread);
 
     gmailThreadsStub.list.returns({
       threads: [{ id: 'foo' }, { id: 'bar' }],
@@ -100,19 +102,19 @@ describe('threads resource module', () => {
 
     it('archives a thread', () => {
       updateThread(exampleThread, {});
-      expect((exampleThread.moveToArchive as SinonStub<any>).called).to.be.true;
+      expect((exampleThread.moveToArchive as unknown as SinonStub<[], void>).called).to.be.true;
     });
 
     it('labels a thread when called with a label option', () => {
       // cast to GmailLabel type, same as above
       const exampleLabel = {} as unknown as GmailLabel;
       updateThread(exampleThread, { label: exampleLabel });
-      expect((exampleThread.addLabel as SinonStub<any>).calledWith(exampleLabel)).to.be.true;
+      expect((exampleThread.addLabel as unknown as SinonStub<[GmailLabel], void>).calledWith(exampleLabel)).to.be.true;
     });
 
     it('marks a thread as when called with markRead option set to true', () => {
       updateThread(exampleThread, { markRead: true });
-      expect((exampleThread.markRead as SinonStub<any>).called).to.be.true;
+      expect((exampleThread.markRead as unknown as SinonStub<[], void>).called).to.be.true;
     });
   });
 });

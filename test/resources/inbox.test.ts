@@ -1,20 +1,20 @@
 import { expect } from 'chai';
-import { createSandbox } from 'sinon';
+import { createSandbox, SinonSandbox } from 'sinon';
 
 import { ensureLabel } from '~/resources/inbox';
 
 
 describe('inbox resource', () => {
   describe('ensureLabel', () => {
-    let ensureLabelSandbox: any;
+    let ensureLabelSandbox: SinonSandbox;
 
     beforeEach(() => {
       ensureLabelSandbox = createSandbox();
 
       global.GmailApp = {
-        getUserLabelByName: (name: string) => ({}),
-        createLabel: (name: string) => ({}),
-      } as any; // cast to any and only stub relevant methods
+        getUserLabelByName: () => ({}),
+        createLabel: () => ({}),
+      } as unknown as GoogleAppsScript.Gmail.GmailApp; // cast to any and only stub relevant methods
     });
 
     afterEach(() => {
@@ -23,7 +23,9 @@ describe('inbox resource', () => {
 
     it('returns a label instance if one exists with a given name', () => {
       ensureLabelSandbox.stub(GmailApp, 'getUserLabelByName').callsFake((name: string) => {
-        if (name === 'foo') return { getName: () => ('foo') };
+        if (name === 'foo') return ({
+          getName: () => ('foo'),
+        } as unknown as GoogleAppsScript.Gmail.GmailLabel);
         return null
       });
 
@@ -35,7 +37,7 @@ describe('inbox resource', () => {
       ensureLabelSandbox.stub(GmailApp, 'getUserLabelByName').returns(null);
       ensureLabelSandbox.stub(GmailApp, 'createLabel').callsFake((name: string) => ({
         getName: () => (name),
-      }));
+      } as unknown as GoogleAppsScript.Gmail.GmailLabel));
 
       const label = ensureLabel('bar');
       expect(label.getName()).to.equal('bar');

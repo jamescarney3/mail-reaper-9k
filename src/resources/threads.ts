@@ -1,4 +1,4 @@
-import { ThreadMetadata } from '~/types';
+import { ThreadMetadata, GmailLabel, GmailThread } from '~/types';
 
 
 const categories = ['PROMOTIONS', 'SOCIAL'];
@@ -8,7 +8,7 @@ export const listThreadIds = (): Array<string> => {
   const fetchNextIds = (currentIds: string[] = [], token: string | null = null): string[] => {
     // 'me' string literal tells the list method to look at my personal inbox
     const threadsList = Gmail.Users.Threads.list('me', { q: threadsQuery, pageToken: token });
-    const { threads = [], nextPageToken } = threadsList;
+    const { threads, nextPageToken } = threadsList;
     const threadIds = threads.map((thread: { id: string }) => thread.id);
     const idResults = [...currentIds, ...threadIds];
 
@@ -20,6 +20,18 @@ export const listThreadIds = (): Array<string> => {
 
 export const getThread = (id: string) => {
   return GmailApp.getThreadById(id);
+};
+
+export const updateThread = (
+  thread: GmailThread,
+  options: { label?: GmailLabel, markRead?: boolean },
+): GmailThread => {
+  const { label, markRead } = options;
+
+  if (label) thread.addLabel(label);
+  if (markRead) thread.markRead();
+  thread.moveToArchive();
+  return thread;
 };
 
 export const getThreadMetadata = (thread: ReturnType<typeof getThread>): ThreadMetadata => {

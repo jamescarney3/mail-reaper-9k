@@ -1,4 +1,5 @@
-import { listThreadIds, getThread, getThreadMetadata } from '~/resources/threads';
+import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
+import { ensureLabel } from '~/resources/inbox';
 import { matchToRule } from '~/resources/rules';
 
 
@@ -10,7 +11,15 @@ const execute = (): void => {
     const metadata = getThreadMetadata(thread);
     const ruleMatch = matchToRule(metadata.sender, metadata.subject);
 
-    Logger.log(ruleMatch);
+    if (ruleMatch) {
+      const { label: labelName, markRead = true } = ruleMatch;
+      const label = labelName ? ensureLabel(labelName) : null;
+      updateThread(thread, { label, markRead });
+      thread.moveToArchive();
+      Logger.log(thread.isInInbox());
+      Logger.log(thread.getLabels());
+      Logger.log(thread.isUnread());
+    }
   });
 
 };

@@ -43,11 +43,10 @@ export const _getRules = (rulesSource: string): Array<Rule> => {
     return sourceDataRules;
   } else if (rulesSource === 'sheets doc') {
     return getSpreadsheetRules(RULES_SHEET_ID, RULES_SHEET_NAME);
-  // NB: arguably superfluous 'else' branch here since, per its type in the
-  // constants initializer, RULES_SOURCE can only ever be one of a union
-  // of string literals that should correspond 1:1 to the conditions in this
-  // statement; at least if anyone manages to change this in a way that beats
-  // the compiler, it will throw
+  // NB: uncovered branch but included for explicitness' sake; if something
+  // mannages to trick the compiler into letting it pass anything other than
+  // the two possible config strings here, this will notice and throw; maybe
+  // overkill, not overly consequential
   } else {
     throw new Error('RULES_SOURCE config string invalid');
   }

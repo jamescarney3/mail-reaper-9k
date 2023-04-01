@@ -1,10 +1,19 @@
+import { LOG_REPORT_DATA, RESULTS_SHEET_ID, RESULTS_SHEET_NAME } from '~/configs/constants-initializer';
 import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
 import { ensureLabel } from '~/resources/inbox';
 import { matchToRule } from '~/resources/rules';
+import { createReportEntry, logReportEntry } from '~/resources/reports';
 
+
+// TODO: move this to an initializer?
+const getResultsSheet = () => {
+  const dataLogSpreadsheet = SpreadsheetApp.openById(RESULTS_SHEET_ID);
+  return dataLogSpreadsheet.getSheetByName(RESULTS_SHEET_NAME);
+};
 
 const execute = (): void => {
   const threadIds = listThreadIds();
+  const resultsSheet = LOG_REPORT_DATA ? getResultsSheet() : null;
 
   threadIds.forEach((id) => {
     const thread = getThread(id);
@@ -16,9 +25,14 @@ const execute = (): void => {
       const label = labelName ? ensureLabel(labelName) : null;
       updateThread(thread, { label, markRead });
       thread.moveToArchive();
-      Logger.log(thread.isInInbox());
-      Logger.log(thread.getLabels());
-      Logger.log(thread.isUnread());
+
+      const reportEntry = createReportEntry(thread, ruleMatch);
+
+      if (LOG_REPORT_DATA) {
+        logReportEntry(resultsSheet, reportEntry);
+      }
+
+      Logger.log(reportEntry);
     }
   });
 

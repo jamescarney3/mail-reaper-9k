@@ -8,7 +8,8 @@
     "build:watch": "webpack --mode production --watch",
     "test": "mocha",
     "test:watch": "mocha --watch",
-    "test:coverage": "nyc yarn run test"
+    "test:coverage": "nyc yarn run test",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",

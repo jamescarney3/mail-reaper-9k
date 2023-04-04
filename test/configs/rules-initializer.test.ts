@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
 
-// import { RulesSourceString } from ''
 
 // NB: need to define this here because it needs to exist in the global scope
 // before the rules-initializer module loads; this is related to the anti-

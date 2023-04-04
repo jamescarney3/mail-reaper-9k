@@ -11,6 +11,10 @@ export type ThreadMetadata = {
   subject: string,
 }
 
+// NB: using a namespace here since all application types are defined or
+// aliased in this module, if this ever expands to use ES2015 module syntax
+// to manage types these can get defined as module exports but the namespace
+// approach seems efficient for now
 export namespace Reports {
   export type Entry = {
     source: string,

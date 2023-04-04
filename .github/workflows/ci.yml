@@ -1,0 +1,22 @@
+name: Mail Reaper CI
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'src/**/*.ts', 'test/**/*.ts' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'src/**/*.ts', 'test/**/*.ts' ]
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19.x
+      - run: yarn
+      - run: yarn test
+      - run: yarn lint

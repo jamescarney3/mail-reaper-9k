@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <h1>Mail Reaper digest for <?= fullDate ?></h1>
+    <? if (!reportEntries.length) { ?>
+      <p>Mail Reaper didn't find any emails that matched your rules today.</p>
+    <? } else { ?>
+      <table style="border: 1px solid black; border-collapse: collapse;">
+        <tr>
+          <th>source</th>
+          <th>from</th>
+          <th>from match</th>
+          <th>subject</th>
+          <th>subject match</th>
+          <th>label</th>
+          <th>mark read</th>
+          <th>received</th>
+          <th>archived</th>
+          <th>id</th>
+        </tr>
+        <? reportEntries.forEach((result) => { ?>
+          <tr>
+            <td><?= result.source ?></td>
+            <td><?= result.sender ?></td>
+            <td><?= result.senderMatch ?></td>
+            <td><?= result.subject ?></td>
+            <td><?= result.subjectMatch ?></td>
+            <td><?= result.label ?></td>
+            <td><?= result.markRead ?></td>
+            <td><?= result.received ?></td>
+            <td><?= result.archived ?></td>
+            <td><a href="<?= result.permalink ?>"><?= result.id ?></a></td>
+          </tr>
+        <? }) ?>
+      </table>
+    <? } ?>
+  </body>
+</html>

@@ -37,3 +37,4 @@ export namespace Reports {
 export type GmailLabel = GoogleAppsScript.Gmail.GmailLabel;
 export type GmailThread = GoogleAppsScript.Gmail.GmailThread;
 export type Sheet = GoogleAppsScript.Spreadsheet.Sheet;
+export type Template = GoogleAppsScript.HTML.HtmlTemplate;

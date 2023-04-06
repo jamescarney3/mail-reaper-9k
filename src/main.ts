@@ -1,8 +1,9 @@
-import { LOG_REPORT_DATA, RESULTS_SHEET_ID, RESULTS_SHEET_NAME } from '~/configs/constants-initializer';
+import { LOG_REPORT_DATA, RESULTS_SHEET_ID, RESULTS_SHEET_NAME, SEND_DIGEST_EMAIL } from '~/configs/constants-initializer';
 import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
 import { ensureLabel } from '~/resources/inbox';
 import { matchToRule } from '~/resources/rules';
 import { createReportEntry, logReportEntry } from '~/resources/reports';
+import { createDigest, addDigestReportEntry, generateTemplate, sendDigestEmail } from '~/resources/digest';
 
 
 // TODO: move this to an initializer?
@@ -12,6 +13,8 @@ const getResultsSheet = () => {
 };
 
 const execute = (): void => {
+  const digest = createDigest();
+
   const threadIds = listThreadIds();
   const resultsSheet = LOG_REPORT_DATA ? getResultsSheet() : null;
 
@@ -32,10 +35,16 @@ const execute = (): void => {
         logReportEntry(resultsSheet, reportEntry);
       }
 
-      Logger.log(reportEntry);
+      if (SEND_DIGEST_EMAIL) {
+        addDigestReportEntry(digest, reportEntry);
+      }
     }
   });
 
+  if (SEND_DIGEST_EMAIL) {
+    const digestTemplate = generateTemplate(digest);
+    sendDigestEmail(digestTemplate);
+  }
 };
 
 // TODO: move this to a types declaration file?

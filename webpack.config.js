@@ -21,7 +21,7 @@ module.exports = {
     },
   },
   output: {
-    path: __dirname ,
+    path: path.join(__dirname, 'build'),
     filename: 'code.gs',
   },
   plugins: [

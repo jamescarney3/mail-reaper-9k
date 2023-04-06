@@ -1,8 +1,8 @@
 # dependencies
 node_modules/**
 
-# compiled script
-code.gs
+# compiled output
+build/*
 
 # secret things
 .env

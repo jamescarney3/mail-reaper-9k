@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GasPlugin = require('gas-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
@@ -25,6 +26,9 @@ module.exports = {
     filename: 'code.gs',
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'src/assets' }],
+    }),
     new GasPlugin({
       autoGlobalExportsFiles: ['**/*.js'],
     }),

@@ -4,6 +4,8 @@ BUILD_DIR="$PROJECT_DIR/build"
 echo installing Mail Reaper 9000
 clasp login
 clasp create --title "Mail Reaper 9000" --type standalone --rootDir "$BUILD_DIR"
+# puts the generated config file where clasp can find it
+mv "$BUILD_DIR/.clasp.json" "$PROJECT_DIR"
 touch .env
 read -p "set EXAMPLE_ENV_VAR:" example_env_var
 echo "EXAMPLE_ENV_VAR=$example_env_var" >> .env

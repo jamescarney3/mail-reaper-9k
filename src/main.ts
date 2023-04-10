@@ -1,7 +1,7 @@
-import { LOG_REPORT_DATA, RESULTS_SHEET_ID, RESULTS_SHEET_NAME, SEND_DIGEST_EMAIL } from '~/configs/constants-initializer';
+import { LOG_REPORT_DATA, RESULTS_SHEET_ID, RESULTS_SHEET_NAME, SEND_DIGEST_EMAIL, DIGEST_ARCHIVE_LABEL } from '~/configs/constants-initializer';
 import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
 import { ensureLabel } from '~/resources/inbox';
-import { matchToRule } from '~/resources/rules';
+import { matchToRule, isDigest } from '~/resources/rules';
 import { createReportEntry, logReportEntry } from '~/resources/reports';
 import { createDigest, addDigestReportEntry, generateTemplate, sendDigestEmail } from '~/resources/digest';
 
@@ -22,6 +22,7 @@ const execute = (): void => {
     const thread = getThread(id);
     const metadata = getThreadMetadata(thread);
     const ruleMatch = matchToRule(metadata.sender, metadata.subject);
+    const digestMatch = isDigest(metadata.sender, metadata.subject);
 
     if (ruleMatch) {
       const { label: labelName, markRead = true } = ruleMatch;
@@ -38,6 +39,10 @@ const execute = (): void => {
       if (SEND_DIGEST_EMAIL) {
         addDigestReportEntry(digest, reportEntry);
       }
+    }
+
+    if (digestMatch) {
+      updateThread(thread, { label: DIGEST_ARCHIVE_LABEL, markRead: true });
     }
   });
 

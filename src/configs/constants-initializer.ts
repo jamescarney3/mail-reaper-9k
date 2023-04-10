@@ -13,7 +13,7 @@ export const RULES_SHEET_NAME = 'Mail Reaper Rules';
 
 // Google Sheets unique document id as defined in env variable; better to keep
 // this out of the source in order not to publish in the repo, but could
-// technincally be defined as a string literal here for debugging purposes
+// technically be defined as a string literal here for debugging purposes
 export const RULES_SHEET_ID: string = process.env.RULES_SHEET_ID;
 
 export type LogReportDataOption = true | false;
@@ -27,7 +27,7 @@ export const RESULTS_SHEET_NAME = 'Mail Reaper Results';
 // whether to send a digest email with a report of all emails processed
 // by the application on a given run
 export type DigestEmailOption = true | false;
-export const SEND_DIGEST_EMAIL: DigestEmailOption = false;
+export const SEND_DIGEST_EMAIL: DigestEmailOption = true;
 
 // any string; must match filename of email digest html template in src/assets
 export const EMAIL_TEMPLATE_LOCATION = 'email-digest';

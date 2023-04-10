@@ -38,7 +38,7 @@ export const generateTemplate = (reportEntries: Array<Reports.Entry>): Template 
 export const sendDigestEmail = (template: Template): void => {
   MailApp.sendEmail({
     to: USER_EMAIL,
-    subject: `${DIGEST_EMAIL_SUBJECT_PREFIX} - ${getFullDate()}`,
+    subject: `${DIGEST_EMAIL_SUBJECT_PREFIX} ${getFullDate()}`,
     htmlBody: template.evaluate().getContent(),
   });
 };

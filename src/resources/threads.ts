@@ -34,11 +34,12 @@ export const updateThread = (
   return thread;
 };
 
-export const getThreadMetadata = (thread: ReturnType<typeof getThread>): ThreadMetadata => {
+export const getThreadMetadata = (thread: GmailThread): ThreadMetadata => {
   return {
     sender: thread.getMessages().reverse()[0].getFrom(),
     subject: thread.getFirstMessageSubject(),
   };
 };
+
 
 export default { listThreadIds, getThread, getThreadMetadata };

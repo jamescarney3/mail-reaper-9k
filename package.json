@@ -6,6 +6,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:watch": "webpack --mode production --watch",
+    "build:setup": "webpack --mode production --env MODE=setup",
+    "build:clean": "rm build/code.gs && rm build/email-digest.html",
     "test": "mocha",
     "test:watch": "mocha --watch",
     "test:coverage": "nyc yarn run test",

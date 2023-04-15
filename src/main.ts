@@ -1,4 +1,10 @@
-import { LOG_REPORT_DATA, RESULTS_SHEET_ID, RESULTS_SHEET_NAME, SEND_DIGEST_EMAIL, DIGEST_ARCHIVE_LABEL } from '~/configs/constants-initializer';
+import {
+  LOG_REPORT_DATA,
+  RESULTS_SHEET_ID,
+  RESULTS_SHEET_NAME,
+  SEND_DIGEST_EMAIL,
+  DIGEST_ARCHIVE_LABEL,
+} from '~/configs/constants-initializer';
 import { listThreadIds, getThread, getThreadMetadata, updateThread } from '~/resources/threads';
 import { ensureLabel } from '~/resources/inbox';
 import { matchToRule, isDigest } from '~/resources/rules';
@@ -42,7 +48,7 @@ const execute = (): void => {
     }
 
     if (digestMatch) {
-      updateThread(thread, { label: DIGEST_ARCHIVE_LABEL, markRead: true });
+      updateThread(thread, { label: ensureLabel(DIGEST_ARCHIVE_LABEL), markRead: true });
     }
   });
 
@@ -52,13 +58,8 @@ const execute = (): void => {
   }
 };
 
-// TODO: move this to a types declaration file?
 declare global {
   function execute(): void;
 }
 
 global.execute = execute;
-
-// import or export keywords let TS know that it should consider this a module
-// and not complain about augmenting the global scope
-export default global.execute;

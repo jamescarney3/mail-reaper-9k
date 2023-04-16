@@ -1,4 +1,7 @@
-export const ensureLabel = (labelName: string): ReturnType<typeof GmailApp.createLabel> => {
+import { GmailLabel } from '~/types';
+
+
+export const ensureLabel = (labelName: string): GmailLabel => {
   const label = GmailApp.getUserLabelByName(labelName);
   return label || GmailApp.createLabel(labelName);
 };

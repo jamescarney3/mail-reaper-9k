@@ -1,3 +1,4 @@
+import { RESULTS_SHEET_HEADERS } from '~/configs/constants-initializer';
 import { Reports, Rule, GmailThread, Sheet } from '~/types';
 
 
@@ -34,19 +35,7 @@ export const createReportEntry = (thread: GmailThread, rule: Rule): Reports.Entr
 // NB: eschewing injecting the sheet as a dependency here, could see the
 // initializer moving to a config module in the future
 export const logReportEntry = (sheet: Sheet, entry: Reports.Entry): void => {
-  sheet.appendRow([
-    entry.source,
-    entry.sender,
-    entry.senderMatch,
-    entry.subject,
-    entry.subjectMatch,
-    entry.label,
-    entry.markRead,
-    entry.received,
-    entry.archived,
-    entry.permalink,
-    entry.id,
-  ]);
+  sheet.appendRow(RESULTS_SHEET_HEADERS.map((header) => (entry[header as keyof Reports.Entry])));
 };
 
 export default { createReportEntry, logReportEntry };

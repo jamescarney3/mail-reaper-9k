@@ -80,7 +80,7 @@ describe('rules resource module', () => {
     it('correctly identifies digest threads', () => {
       const matchingDigestSender = constantsInitializer.USER_EMAIL;
       const nonMatchingDigestSender = 'foo@bar.com';
-      const matchingSubject = constantsInitializer.DIGEST_EMAIL_SUBJECT_PREFIX;
+      const matchingSubject = constantsInitializer.DIGEST_EMAIL_SUBJECT_PREFIX + 'some date string';
       const nonMatchingSubject = 'subject without the right prefix';
 
       expect(isDigest(matchingDigestSender, matchingSubject)).to.be.true;

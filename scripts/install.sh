@@ -5,11 +5,13 @@ BUILD_DIR="$PROJECT_DIR/build"
 CONSTANTS_CONFIG_FILE="$PROJECT_DIR/src/configs/constants-initializer.ts"
 RULES_DATA_FILE="$PROJECT_DIR/src/data/rules-data.ts"
 
-RESET="\n\033[0m"
-RED="\033[31m"
-GREEN="\033[32m"
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+NORMAL=$(tput sgr0)
 
-echo "${RED}installing Mail Reaper 9000${RESET}";
+echo "${RED}installing Mail Reaper 9000${NORMAL}";
 
 yarn install
 
@@ -17,7 +19,11 @@ yarn install
 clasp login
 clasp create --title "Mail Reaper 9000" --type standalone --rootDir "$BUILD_DIR"
 # puts the generated config file where clasp can find it
-mv "$BUILD_DIR/.clasp.json" "$PROJECT_DIR"
+if [ -f "$BUILD_DIR/.clasp.json" ]; then
+  mv "$BUILD_DIR/.clasp.json" "$PROJECT_DIR"
+else
+  exit 1
+fi
 
 # create/overwrite .env file
 : > .env
@@ -26,7 +32,7 @@ mv "$BUILD_DIR/.clasp.json" "$PROJECT_DIR"
 while true; do
   echo $GREEN
   read -p $'enter user email (required): ' email
-  echo $RESET
+  echo $NORMAL
 
   if [ ! -z $email ]
   then
@@ -41,7 +47,7 @@ done
 while true; do
   echo $GREEN
   read -n1 -p $'create new Google Sheets document for rules and logs? [y/N]: ' do_setup
-  echo $RESET
+  echo $NORMAL
 
   case $do_setup in
     [yY])
@@ -51,15 +57,19 @@ while true; do
       clasp open
 
       printf "%s\n" \
+        "${YELLOW}" \
         "Mail Reaper has built and pushed a data sheet setup script to the" \
-        "Google Apps Script console. Manually run the \`setupDataSheet\`" \
-        "function to print the ID of the created Sheets document in the GAS" \
-        "execution log and make and enter it below" \
-        ""
+        "Google Apps Script console. Open the console and manually run the" \
+        "\`setupDataSheet\` function to create a formatted Sheets document" \
+        "and print the ID of the created Sheets document in the GAS" \
+        "execution log." \
+        "" \
+        "Enter it at the prompt below." \
+        "${NORMAL}"
 
       echo $GREEN
       read -p $'enter Sheets document ID (required): ' sheets_id
-      echo $RESET
+      echo $NORMAL
       echo "RULES_SHEET_ID=$sheets_id" >> .env
       echo "RESULTS_SHEET_ID=$sheets_id" >> .env
 
@@ -79,15 +89,18 @@ while true; do
 
       yarn run build
       clasp push
+      clasp open
 
       printf "%s\n" \
+        "${YELLOW}" \
         "Mail Reaper is configured. You can now define rules in the Mail" \
         "Reaper Rules sheet in the created Sheets doc and create triggers" \
         "to run the main function in the GAS console." \
         "" \
         "See the Configuration section of the project README.md file for" \
         "more information about enabling, disabling, and customizing" \
-        "including rule definitions, logging, and digest emails."
+        "including rule definitions, logging, and digest emails." \
+        "${NORMAL}"
 
       break
     ;;
@@ -97,6 +110,7 @@ while true; do
       clasp open
 
       printf "%s\n" \
+        "${YELLOW}" \
         "Mail Reaper will load rules from the src/data/rules-data.ts file." \
         "To add or change rules, run a Webpack build after editing the" \
         "exported array and use clasp to push the new build to Google Apps" \
@@ -108,7 +122,8 @@ while true; do
         "" \
         "See the Configuration section of the project README.md file for" \
         "more information about enabling, disabling, and customizing" \
-        "including rule definitions, logging, and digest emails."
+        "including rule definitions, logging, and digest emails." \
+        "${NORMAL}"
 
       break
     ;;

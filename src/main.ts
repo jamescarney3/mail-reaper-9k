@@ -49,6 +49,7 @@ const execute = (): void => {
 
     if (digestMatch) {
       updateThread(thread, { label: ensureLabel(DIGEST_ARCHIVE_LABEL), markRead: true });
+      thread.moveToArchive();
     }
   });
 

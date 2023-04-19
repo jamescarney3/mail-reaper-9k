@@ -61,21 +61,22 @@ export const RESULTS_SHEET_ID: string = process.env.RESULTS_SHEET_ID;
 export const RESULTS_SHEET_NAME = 'Mail Reaper Results';
 
 // array of strings, these cannot change without risking compromising log-
-// and digest-related functionality
+// and digest-related functionality, intended log sheet column names in
+// comments
 //
 // TODO: split up constants vs configs
 export const RESULTS_SHEET_HEADERS = [
-  'source',
-  'from',
-  'from match',
-  'subject',
-  'subject match',
-  'label',
-  'mark read',
-  'received',
-  'archived',
-  'permalink',
-  'id',
+  'source', // source
+  'sender', // from
+  'senderMatch', // from match
+  'subject', // subject
+  'subjectMatch', // subject match
+  'label', // label
+  'markRead', // mark read
+  'received', // received
+  'archived', // archived
+  'permalink', // permalink
+  'id', // id
 ];
 
 

@@ -9,7 +9,8 @@ export const listThreadIds = (): Array<string> => {
     // 'me' string literal tells the list method to look at my personal inbox
     const threadsList = Gmail.Users.Threads.list('me', { q: threadsQuery, pageToken: token });
     const { threads, nextPageToken } = threadsList;
-    const threadIds = threads.map((thread: { id: string }) => thread.id);
+    // threads can be undefined here!
+    const threadIds = (threads || []).map((thread: { id: string }) => thread.id);
     const idResults = [...currentIds, ...threadIds];
 
     return nextPageToken ? fetchNextIds(idResults, nextPageToken) : idResults;

@@ -1,6 +1,6 @@
 
 # Mail Reaper 9000
-Mail Reaper 9000 is an Gmail inbox management tool with the ability to automatically label and archive emails according to a user-defined set of rules that describe to how to identify individual threads and what operations to perform on them.
+Mail Reaper 9000 is a Gmail inbox management tool to automatically label and archive emails according to a user-defined set of rules that describe to how to identify individual threads and what operations to perform on them.
 
 Its main routine can be scheduled via Google Apps Script triggers at any interval supported by that platform.
 

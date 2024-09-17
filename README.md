@@ -48,10 +48,7 @@ sh ./scripts/refresh-manifest.sh
 ```
 
 ## Configuration
-[[ coming soon ]]
-
-## Advanced Configuration
-[[ coming soon ]]
+[[ todo ]]
 
 ## Troubleshooting
 ### Clasp fails during installation
